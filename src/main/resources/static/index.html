@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f5ef">
+    <title>FoodShare | Community Exchange</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="rail" aria-label="Primary navigation">
+            <a class="brand-mark" href="/" aria-label="FoodShare overview">F<span>S</span></a>
+            <div class="rail-divider"></div>
+            <a class="rail-link active" href="/" aria-label="Overview" title="Overview">
+                <span class="nav-glyph grid-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </a>
+            <div class="rail-bottom"><span class="rail-dot"></span></div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="wordmark"><span class="wordmark-symbol" aria-hidden="true"></span>FoodShare</div>
+                <div class="topbar-right">
+                    <span class="live-state"><span class="live-dot"></span>Live overview</span>
+                    <span class="topbar-divider"></span>
+                    <span class="today-label" id="today-label">Today</span>
+                </div>
+            </header>
+
+            <section class="page-heading" aria-labelledby="page-title">
+                <div>
+                    <p class="eyebrow"><span class="eyebrow-line"></span>COMMUNITY EXCHANGE</p>
+                    <h1 id="page-title">Surplus, <em>shared.</em></h1>
+                    <p class="heading-note">Food moving from local donors to community kitchens.</p>
+                </div>
+                <button class="refresh-button" id="refresh-button" type="button">
+                    <span class="refresh-icon" aria-hidden="true">&#8635;</span>
+                    Refresh data
+                </button>
+            </section>
+
+            <section class="metric-grid" aria-label="FoodShare summary">
+                <article class="metric metric-green">
+                    <div class="metric-top"><span>Ready to share</span><span class="metric-index">01</span></div>
+                    <div class="metric-value" id="available-count">--</div>
+                    <div class="metric-foot"><span class="status-dot available-dot"></span>Available listings</div>
+                </article>
+                <article class="metric metric-yellow">
+                    <div class="metric-top"><span>In progress</span><span class="metric-index">02</span></div>
+                    <div class="metric-value" id="claimed-count">--</div>
+                    <div class="metric-foot"><span class="status-dot claimed-dot"></span>Claimed listings</div>
+                </article>
+                <article class="metric metric-coral">
+                    <div class="metric-top"><span>Handed over</span><span class="metric-index">03</span></div>
+                    <div class="metric-value" id="collected-count">--</div>
+                    <div class="metric-foot"><span class="status-dot collected-dot"></span>Collected listings</div>
+                </article>
+                <article class="metric metric-white">
+                    <div class="metric-top"><span>People sharing</span><span class="metric-index">04</span></div>
+                    <div class="metric-value" id="donor-count">--</div>
+                    <div class="metric-foot"><span class="metric-foot-secondary" id="ngo-count">--</span>NGO partners</div>
+                </article>
+            </section>
+
+            <section class="content-grid">
+                <div class="listing-panel">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow section-eyebrow">THE EXCHANGE</p>
+                            <h2>Food listings</h2>
+                        </div>
+                        <span class="listing-count" id="listing-count">-- records</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Food &amp; donor</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Safe until</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listing-rows">
+                                <tr><td colspan="4" class="table-message">Loading food listings...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-footer"><span class="footer-mark"></span><span id="updated-label">Connecting to FoodShare API</span></div>
+                </div>
+
+                <aside class="insight-column" aria-label="Community impact">
+                    <article class="impact-panel">
+                        <div class="impact-heading">
+                            <p class="eyebrow impact-eyebrow">THIS MONTH</p>
+                            <span class="impact-arrow" aria-hidden="true">&#8599;</span>
+                        </div>
+                        <div class="impact-value" id="diverted-total">--</div>
+                        <p class="impact-label">quantity collected</p>
+                        <div class="impact-rule"></div>
+                        <p class="impact-caption" id="month-label">Collected food, by listing date</p>
+                    </article>
+
+                    <article class="distribution-panel">
+                        <div class="section-heading compact-heading">
+                            <div>
+                                <p class="eyebrow section-eyebrow">AT A GLANCE</p>
+                                <h2>Listing mix</h2>
+                            </div>
+                        </div>
+                        <div class="distribution-bar" role="img" aria-label="Listing status proportions" id="distribution-bar">
+                            <span class="distribution-segment segment-available"></span>
+                            <span class="distribution-segment segment-claimed"></span>
+                            <span class="distribution-segment segment-collected"></span>
+                            <span class="distribution-segment segment-expired"></span>
+                        </div>
+                        <div class="legend-list">
+                            <div class="legend-row"><span class="legend-name"><i class="legend-dot available-dot"></i>Available</span><span id="mix-available">--</span></div>
+                            <div class="legend-row"><span class="legend-name"><i class="legend-dot claimed-dot"></i>Claimed</span><span id="mix-claimed">--</span></div>
+                            <div class="legend-row"><span class="legend-name"><i class="legend-dot collected-dot"></i>Collected</span><span id="mix-collected">--</span></div>
+                            <div class="legend-row"><span class="legend-name"><i class="legend-dot expired-dot"></i>Expired</span><span id="mix-expired">--</span></div>
+                        </div>
+                    </article>
+                </aside>
+            </section>
+
+            <footer class="page-footer"><span>FOODSHARE</span><span>LOCAL FOOD. SHARED WITH CARE.</span><span id="footer-year"></span></footer>
+        </main>
+    </div>
+    <div class="toast" id="error-toast" role="status" aria-live="polite"></div>
+</body>
+</html>

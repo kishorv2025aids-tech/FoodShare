@@ -1,0 +1,285 @@
+# FoodShare - Surplus Food Donation Matching Platform
+
+A small Java 17 / Spring Boot REST API for donors to publish surplus food and NGOs to claim it. The project uses Spring Web, Spring Data JPA, Bean Validation, and MySQL.
+
+## Folder Structure
+
+```text
+foodshare/
+|-- .github/
+|   `-- copilot-instructions.md
+|-- pom.xml
+|-- README.md
+`-- src/
+    |-- main/
+    |   |-- java/com/example/foodshare/
+    |   |   |-- FoodshareApplication.java
+    |   |   |-- controller/
+    |   |   |   |-- ClaimController.java
+    |   |   |   |-- DashboardController.java
+    |   |   |   |-- DonorController.java
+    |   |   |   |-- FoodListingController.java
+    |   |   |   `-- NGOController.java
+    |   |   |-- entity/
+    |   |   |   |-- Claim.java
+    |   |   |   |-- ClaimStatus.java
+    |   |   |   |-- Donor.java
+    |   |   |   |-- FoodListing.java
+    |   |   |   |-- FoodStatus.java
+    |   |   |   `-- NGO.java
+    |   |   |-- exception/
+    |   |   |   |-- BusinessRuleException.java
+    |   |   |   |-- GlobalExceptionHandler.java
+    |   |   |   `-- ResourceNotFoundException.java
+    |   |   |-- repository/
+    |   |   |   |-- ClaimRepository.java
+    |   |   |   |-- DonorRepository.java
+    |   |   |   |-- FoodListingRepository.java
+    |   |   |   `-- NGORepository.java
+    |   |   `-- service/
+    |   |       |-- ClaimService.java
+    |   |       |-- DonorService.java
+    |   |       |-- FoodListingService.java
+    |   |       `-- NGOService.java
+    |   `-- resources/
+    |       |-- application.properties
+    |       `-- static/
+    |           |-- app.js
+    |           |-- index.html
+    |           `-- styles.css
+    `-- test/java/com/example/foodshare/service/
+        |-- ClaimServiceTest.java
+        `-- FoodListingServiceTest.java
+```
+
+## Create the MySQL Database
+
+1. Open MySQL Workbench and connect to the local MySQL server on port `3306` as `root`.
+2. Open a SQL tab and run:
+
+   ```sql
+   CREATE DATABASE foodshare;
+   USE foodshare;
+   ```
+
+3. Set the `DB_PASSWORD` environment variable to the password for your local `root` account. This keeps the password out of project files and Git history.
+4. `spring.jpa.hibernate.ddl-auto=update` creates or updates the entity tables when the application starts. Keep the database server running while starting the API.
+
+## Run in VS Code
+
+1. Install a JDK 17 and Maven, then open this project folder in VS Code. The Java Extension Pack is useful for Java editing and running, but is not required by the application.
+2. Set `DB_PASSWORD` and create the `foodshare` schema as above. In PowerShell, set it for the current terminal before running the app:
+3. Open `FoodshareApplication.java` and click **Run** above `main`, or use the VS Code terminal at the project root:
+
+   ```powershell
+  $env:DB_PASSWORD = "your-local-mysql-password"
+  mvn spring-boot:run
+   ```
+
+4. The dashboard and API are available at `http://localhost:8080`. The dashboard reads the existing REST routes. Stop the running process with `Ctrl+C` in the terminal.
+5. To run the unit tests:
+
+   ```powershell
+   mvn test
+   ```
+
+### Confirm the MySQL Connection
+
+Look in the startup terminal for Hibernate schema SQL and a successful Hikari connection-pool startup, followed by the Spring Boot `Started FoodshareApplication` message. A wrong password, stopped MySQL service, or missing `foodshare` schema will produce a startup connection error; check the datasource values and MySQL service before retrying.
+
+## Postman Requests
+
+All routes use `http://localhost:8080`. For JSON request bodies, select **Body > raw > JSON**. Replace IDs with the IDs returned by your own create requests. The food expiry example is deliberately in the future; use a future local date-time when testing.
+
+### Donors
+
+**Create donor** - `POST /api/donors`
+
+```json
+{
+  "name": "Asha Kumar",
+  "email": "asha@example.com",
+  "phone": "9876543210"
+}
+```
+
+Response `201 Created`:
+
+```json
+{
+  "id": 1,
+  "name": "Asha Kumar",
+  "email": "asha@example.com",
+  "phone": "9876543210"
+}
+```
+
+**List donors** - `GET /api/donors` (no body). Response `200 OK`:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Asha Kumar",
+    "email": "asha@example.com",
+    "phone": "9876543210"
+  }
+]
+```
+
+**Get donor** - `GET /api/donors/1` (no body). Response `200 OK` is the same single-donor object above. An unknown ID returns `404` with `{"error":"Donor not found with id 1"}`.
+
+### NGOs
+
+**Create NGO** - `POST /api/ngos`
+
+```json
+{
+  "name": "Community Kitchen",
+  "email": "hello@community.example",
+  "phone": "9123456780"
+}
+```
+
+Response `201 Created`:
+
+```json
+{
+  "id": 1,
+  "name": "Community Kitchen",
+  "email": "hello@community.example",
+  "phone": "9123456780"
+}
+```
+
+**List NGOs** - `GET /api/ngos` (no body). Response `200 OK` is a JSON array of NGO objects with `id`, `name`, `email`, and `phone`.
+
+**Get NGO** - `GET /api/ngos/1` (no body). Response `200 OK` is the single-NGO object above. An unknown ID returns `404` with `{"error":"NGO not found with id 1"}`.
+
+### Food Listings
+
+**Create listing** - `POST /api/food-listings?donorId=1`
+
+```json
+{
+  "foodType": "Vegetable Rice",
+  "quantity": 25,
+  "safeToEatUntil": "2099-12-31T18:00:00"
+}
+```
+
+Response `201 Created`:
+
+```json
+{
+  "id": 1,
+  "donor": {
+    "id": 1,
+    "name": "Asha Kumar",
+    "email": "asha@example.com",
+    "phone": "9876543210"
+  },
+  "foodType": "Vegetable Rice",
+  "quantity": 25,
+  "safeToEatUntil": "2099-12-31T18:00:00",
+  "createdAt": "2026-09-28T12:00:00",
+  "status": "AVAILABLE"
+}
+```
+
+`createdAt` in the response is set by the server; its example value is illustrative.
+
+**List all listings** - `GET /api/food-listings` (no body). Response `200 OK` is a JSON array of listing objects in the format above. The response includes related donor data but not inverse collections.
+
+**List available listings** - `GET /api/food-listings/available` (no body). Response `200 OK` is a JSON array of unexpired `AVAILABLE` listings. Listings whose safety deadline has passed are marked `EXPIRED` and omitted.
+
+**Mark listing collected** - `PUT /api/food-listings/1/collected` (no body). First claim the listing. Response `200 OK` is the listing object with `"status": "COLLECTED"`. If it is not `CLAIMED`, response `409 Conflict` is `{"error":"Only CLAIMED food can be marked as COLLECTED"}`.
+
+**Monthly diverted total** - `GET /api/food-listings/diverted?year=2026&month=9` (no body). Response `200 OK` is a JSON number, for example:
+
+```json
+25
+```
+
+The total sums quantities for `COLLECTED` listings whose `createdAt` falls in the requested calendar month. The specified entity fields do not include a collection timestamp, so `createdAt` is the month boundary available to the report. If there are no matching rows, the response is `0`.
+
+### Claims
+
+**Claim a listing** - `POST /api/claims?listingId=1&ngoId=1` (no body). Response `201 Created`:
+
+```json
+{
+  "id": 1,
+  "foodListing": {
+    "id": 1,
+    "donor": {
+      "id": 1,
+      "name": "Asha Kumar",
+      "email": "asha@example.com",
+      "phone": "9876543210"
+    },
+    "foodType": "Vegetable Rice",
+    "quantity": 25,
+    "safeToEatUntil": "2099-12-31T18:00:00",
+    "createdAt": "2026-09-28T12:00:00",
+    "status": "CLAIMED"
+  },
+  "ngo": {
+    "id": 1,
+    "name": "Community Kitchen",
+    "email": "hello@community.example",
+    "phone": "9123456780"
+  },
+  "claimedAt": "2026-09-28T12:05:00",
+  "status": "ACTIVE"
+}
+```
+
+Claiming locks the listing row, checks the listing and NGO, checks expiry/status/active-claim rules, stores the claim, and changes the listing to `CLAIMED` in one transaction. Invalid claim rules return `409 Conflict`; unknown IDs return `404`.
+
+### Error Response Example
+
+Validation errors and business errors return JSON with a message rather than a stack trace. For example, a non-positive quantity returns `400 Bad Request`:
+
+```json
+{
+  "error": "quantity: Quantity must be greater than zero"
+}
+```
+
+## Business Rule Test Cases
+
+The service unit tests under `src/test/java` cover these cases:
+
+| Rule | Test/check | Expected result |
+|---|---|---|
+| Listing requires an existing donor | Create using an unknown donor ID | `404`; no listing saved |
+| Listing requires a safety deadline | Omit `safeToEatUntil` | `400` validation or service error JSON |
+| Safety deadline must be in the future | Send a past `safeToEatUntil` | `409` with a future-deadline message |
+| Quantity must be positive | Send `quantity: 0` or a negative number | `400` validation JSON |
+| Food type, donor/NGO name, phone, email are validated | Omit required text or send malformed email | `400` validation JSON |
+| Only available food is claimable | Claim a `CLAIMED`, `COLLECTED`, or `EXPIRED` listing | `409`; no new claim |
+| Expired food cannot be claimed | Claim after `safeToEatUntil` | `409`; an available row becomes `EXPIRED` |
+| Only one active claim is allowed | Claim the same listing a second time | `409`; first claim remains |
+| Claim is atomic | Successful claim operation | Claim is `ACTIVE`; listing becomes `CLAIMED` |
+| Only claimed food can be collected | Mark an `AVAILABLE` listing collected | `409`; status unchanged |
+| Claimed food can be collected | Mark a `CLAIMED` listing collected | `200`; status becomes `COLLECTED` |
+| Only collected food counts in the report | Compare collected and non-collected listings in the selected month | Only collected quantities are included |
+| Empty monthly result is zero | Request a month with no collected rows | `200` and numeric response `0` |
+
+Run the automated service tests with `mvn test`. For the full REST checks, perform the Postman requests above in order, then repeat the claim and collection calls to see the rejected transitions.
+
+## Verify Tables and Data in MySQL Workbench
+
+After starting the application, refresh the `foodshare` schema in the Workbench **SCHEMAS** pane. Open a SQL tab and run:
+
+```sql
+USE foodshare;
+SHOW TABLES;
+SELECT * FROM donor;
+SELECT * FROM ngo;
+SELECT * FROM food_listing;
+SELECT * FROM claim;
+```
+
+The tables are created from the JPA entities: `donor`, `ngo`, `food_listing`, and `claim`. Use the select statements after creating donors, NGOs, listings, and claims in Postman to inspect persisted rows and status changes.
