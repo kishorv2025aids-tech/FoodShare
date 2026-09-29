@@ -24,8 +24,13 @@
                 <div class="wordmark"><span class="wordmark-symbol" aria-hidden="true"></span>FoodShare</div>
                 <div class="topbar-right">
                     <span class="live-state"><span class="live-dot"></span>Live overview</span>
+                    <a class="topbar-link" href="/entities">Browse records</a>
                     <span class="topbar-divider"></span>
                     <span class="today-label" id="today-label">Today</span>
+                    <span class="account-label" id="account-label"></span>
+                    <form class="logout-form" action="/logout" method="post" id="logout-form">
+                        <button class="logout-button" type="submit">Sign out</button>
+                    </form>
                 </div>
             </header>
 

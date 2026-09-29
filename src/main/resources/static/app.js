@@ -12,6 +12,7 @@ const elements = {
     monthLabel: document.querySelector("#month-label"),
     footerYear: document.querySelector("#footer-year"),
     refreshButton: document.querySelector("#refresh-button"),
+    logoutForm: document.querySelector("#logout-form"),
     errorToast: document.querySelector("#error-toast")
 };
 
@@ -100,6 +101,15 @@ async function refreshDashboard() {
     elements.footerYear.textContent = String(now.getFullYear());
 
     try {
+        const csrf = await getJson("/api/auth/csrf");
+        const tokenInput = document.createElement("input");
+        tokenInput.type = "hidden";
+        tokenInput.name = "_csrf";
+        tokenInput.value = csrf.token;
+        elements.logoutForm.append(tokenInput);
+
+        const currentUser = await getJson("/api/auth/me");
+        document.querySelector("#account-label").textContent = `${currentUser.role} / ${currentUser.email}`;
         const [available, donors, ngos, diverted] = await Promise.all([
             getJson("/api/food-listings/available"),
             getJson("/api/donors"),

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f5ef">
+    <title>Records | FoodShare</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/entities.css">
+    <script src="/entities.js" defer></script>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="rail" aria-label="Primary navigation">
+            <a class="brand-mark" href="/" aria-label="FoodShare overview">F<span>S</span></a>
+            <div class="rail-divider"></div>
+            <a class="rail-link" href="/" aria-label="Overview" title="Overview"><span class="nav-glyph grid-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a>
+            <a class="rail-link active records-rail-link" href="/entities" aria-label="Records" title="Records">&#9776;</a>
+            <div class="rail-bottom"><span class="rail-dot"></span></div>
+        </aside>
+        <main class="main-content entities-main">
+            <header class="topbar">
+                <div class="wordmark"><span class="wordmark-symbol" aria-hidden="true"></span>FoodShare</div>
+                <div class="topbar-right">
+                    <a class="topbar-link" href="/">Overview</a>
+                    <span class="account-label" id="account-label"></span>
+                    <form class="logout-form" action="/logout" method="post" id="logout-form"><button class="logout-button" type="submit">Sign out</button></form>
+                </div>
+            </header>
+            <section class="page-heading records-heading">
+                <div>
+                    <p class="eyebrow"><span class="eyebrow-line"></span>SHARED DIRECTORY</p>
+                    <h1>Project <em>records.</em></h1>
+                    <p class="heading-note">Browse donors, NGO partners, food listings, and claims.</p>
+                </div>
+                <button class="refresh-button" id="records-refresh" type="button"><span class="refresh-icon" aria-hidden="true">&#8635;</span>Refresh records</button>
+            </section>
+            <section class="records-panel">
+                <div class="records-toolbar">
+                    <div class="entity-tabs" role="tablist" aria-label="Entity type">
+                        <button class="entity-tab active" type="button" role="tab" aria-selected="true" data-entity="donors">Donors <span id="donors-tab-count">--</span></button>
+                        <button class="entity-tab" type="button" role="tab" aria-selected="false" data-entity="ngos">NGOs <span id="ngos-tab-count">--</span></button>
+                        <button class="entity-tab" type="button" role="tab" aria-selected="false" data-entity="food-listings">Food listings <span id="food-listings-tab-count">--</span></button>
+                        <button class="entity-tab" type="button" role="tab" aria-selected="false" data-entity="claims">Claims <span id="claims-tab-count">--</span></button>
+                    </div>
+                    <label class="search-box"><span aria-hidden="true">&#9906;</span><input id="record-search" type="search" placeholder="Search visible records" aria-label="Search visible records"></label>
+                </div>
+                <div class="entity-table-wrap">
+                    <table class="entity-table" id="entity-table">
+                        <thead id="entity-head"></thead>
+                        <tbody id="entity-rows"><tr><td class="table-message">Loading records...</td></tr></tbody>
+                    </table>
+                </div>
+                <div class="records-footer"><span id="records-summary">Loading records</span><span id="records-updated"></span></div>
+            </section>
+            <footer class="page-footer"><span>FOODSHARE</span><span>ALL PROJECT ENTITIES</span><span id="footer-year"></span></footer>
+        </main>
+    </div>
+    <div class="toast" id="error-toast" role="status" aria-live="polite"></div>
+</body>
+</html>

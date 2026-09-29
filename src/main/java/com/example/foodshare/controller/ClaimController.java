@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/claims")
 public class ClaimController {
@@ -24,5 +26,10 @@ public class ClaimController {
             @RequestParam Long listingId,
             @RequestParam Long ngoId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(claimService.claim(listingId, ngoId));
+    }
+
+    @org.springframework.web.bind.annotation.GetMapping
+    public ResponseEntity<List<Claim>> findAll() {
+        return ResponseEntity.ok(claimService.findAll());
     }
 }

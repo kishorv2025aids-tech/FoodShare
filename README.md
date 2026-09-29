@@ -1,6 +1,6 @@
 # FoodShare - Surplus Food Donation Matching Platform
 
-A small Java 17 / Spring Boot REST API for donors to publish surplus food and NGOs to claim it. The project uses Spring Web, Spring Data JPA, Bean Validation, and MySQL.
+A Java 17 / Spring Boot application for donors to publish surplus food and NGOs to claim it. It includes a REST API, MySQL persistence, session-based sign-in, account registration for donors and NGOs, a dashboard, and a searchable browser for all domain records.
 
 ## Folder Structure
 
@@ -14,18 +14,23 @@ foodshare/
     |-- main/
     |   |-- java/com/example/foodshare/
     |   |   |-- FoodshareApplication.java
+    |   |   |-- config/SecurityConfig.java
     |   |   |-- controller/
+    |   |   |   |-- AuthController.java
+    |   |   |   |-- AuthPageController.java
     |   |   |   |-- ClaimController.java
     |   |   |   |-- DashboardController.java
     |   |   |   |-- DonorController.java
     |   |   |   |-- FoodListingController.java
     |   |   |   `-- NGOController.java
     |   |   |-- entity/
+    |   |   |   |-- AccountRole.java
     |   |   |   |-- Claim.java
     |   |   |   |-- ClaimStatus.java
     |   |   |   |-- Donor.java
     |   |   |   |-- FoodListing.java
     |   |   |   |-- FoodStatus.java
+    |   |   |   |-- FoodShareAccount.java
     |   |   |   `-- NGO.java
     |   |   |-- exception/
     |   |   |   |-- BusinessRuleException.java
@@ -35,17 +40,27 @@ foodshare/
     |   |   |   |-- ClaimRepository.java
     |   |   |   |-- DonorRepository.java
     |   |   |   |-- FoodListingRepository.java
+    |   |   |   |-- FoodShareAccountRepository.java
     |   |   |   `-- NGORepository.java
     |   |   `-- service/
+    |   |       |-- AccountService.java
     |   |       |-- ClaimService.java
     |   |       |-- DonorService.java
     |   |       |-- FoodListingService.java
+    |   |       |-- FoodShareUserDetailsService.java
     |   |       `-- NGOService.java
     |   `-- resources/
     |       |-- application.properties
     |       `-- static/
+    |           |-- auth.css
+    |           |-- auth.js
+    |           |-- entities.css
+    |           |-- entities.html
+    |           |-- entities.js
     |           |-- app.js
     |           |-- index.html
+    |           |-- signin.html
+    |           |-- signup.html
     |           `-- styles.css
     `-- test/java/com/example/foodshare/service/
         |-- ClaimServiceTest.java
@@ -76,8 +91,10 @@ foodshare/
   mvn spring-boot:run
    ```
 
-4. The dashboard and API are available at `http://localhost:8080`. The dashboard reads the existing REST routes. Stop the running process with `Ctrl+C` in the terminal.
-5. To run the unit tests:
+4. Open `http://localhost:8080/signup` to register as a Donor or NGO. Passwords must be at least 8 characters and are stored as BCrypt hashes. After registration, sign in at `http://localhost:8080/signin`.
+5. After sign-in, the dashboard is at `http://localhost:8080/`. Browse Donors, NGOs, Food Listings, and Claims at `http://localhost:8080/entities`; tabs and search use the existing database records. Sign out with the button in the top-right corner.
+6. Stop the running process with `Ctrl+C` in the terminal.
+7. To run the unit tests:
 
    ```powershell
    mvn test
@@ -87,9 +104,33 @@ foodshare/
 
 Look in the startup terminal for Hibernate schema SQL and a successful Hikari connection-pool startup, followed by the Spring Boot `Started FoodshareApplication` message. A wrong password, stopped MySQL service, or missing `foodshare` schema will produce a startup connection error; check the datasource values and MySQL service before retrying.
 
+## Sign-In and Entity Browser
+
+Sign-up accepts a name, email, phone, password, and role (`DONOR` or `NGO`). A successful sign-up creates the corresponding donor or NGO record and a linked account record. The email must be unique; passwords must have at least 8 characters and are BCrypt-hashed. Sign in uses a server-side HTTP session; JWT is not used. Spring Security protects the dashboard, the entity browser, and all application API endpoints. The claims list is available to signed-in users through `GET /api/claims`.
+
 ## Postman Requests
 
-All routes use `http://localhost:8080`. For JSON request bodies, select **Body > raw > JSON**. Replace IDs with the IDs returned by your own create requests. The food expiry example is deliberately in the future; use a future local date-time when testing.
+All routes use `http://localhost:8080`. Sign in first; Spring Security keeps an HTTP session cookie. For POST and PUT calls in Postman, retain the session cookie and include the CSRF header and token obtained from `GET /api/auth/csrf`. For JSON request bodies, select **Body > raw > JSON**. Replace IDs with the IDs returned by your own create requests. The food expiry example is deliberately in the future; use a future local date-time when testing.
+
+**Sign-up** - `POST /api/auth/signup` (public; CSRF header required)
+
+```json
+{
+  "name": "Asha Kumar",
+  "email": "asha@example.com",
+  "phone": "9876543210",
+  "password": "minimum-eight-characters",
+  "role": "DONOR"
+}
+```
+
+Use `"role": "NGO"` to create an NGO account. Successful sign-up returns `201 Created`; then sign in through the website at `/signin`.
+
+**Get CSRF token** - `GET /api/auth/csrf` (public). Keep the session cookie and send the returned token as the `X-CSRF-TOKEN` header for state-changing requests.
+
+**Current account** - `GET /api/auth/me` (signed in). Returns the signed-in email and `DONOR` or `NGO` role.
+
+**List claims** - `GET /api/claims` (signed in). Returns claims with their food listing and NGO partner.
 
 ### Donors
 

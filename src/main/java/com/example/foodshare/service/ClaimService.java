@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ClaimService {
@@ -29,6 +30,11 @@ public class ClaimService {
         this.foodListingRepository = foodListingRepository;
         this.ngoRepository = ngoRepository;
         this.claimRepository = claimRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Claim> findAll() {
+        return claimRepository.findAll();
     }
 
     @Transactional(noRollbackFor = BusinessRuleException.class)

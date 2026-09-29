@@ -1,0 +1,25 @@
+.entities-main { max-width: 1480px; }
+.records-rail-link { color: #d6e5d8; text-decoration: none; font-size: 17px; }
+.records-heading { padding-bottom: 23px; }
+.records-panel { overflow: hidden; border: 1px solid #e0e5dd; border-radius: 6px; background: rgba(255,255,255,.88); animation: enter 500ms 80ms ease both; }
+.records-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 14px 18px; border-bottom: 1px solid #e8ece6; }
+.entity-tabs { display: flex; align-items: center; gap: 4px; }
+.entity-tab { display: inline-flex; min-height: 35px; align-items: center; gap: 8px; padding: 0 12px; border: 0; border-radius: 4px; background: transparent; color: #647067; cursor: pointer; font-size: 11px; }
+.entity-tab span { color: #8c958d; font: 9px 'DM Mono', 'Courier New', monospace; }
+.entity-tab:hover { background: #f3f5ef; color: var(--ink); }
+.entity-tab.active { background: #e5eee5; color: #315b3d; font-weight: 600; }
+.entity-tab.active span { color: #52765a; }
+.search-box { display: flex; width: min(230px, 35%); height: 34px; align-items: center; gap: 7px; padding: 0 10px; border: 1px solid #e0e5dd; border-radius: 4px; background: #fafbf8; color: #879087; }
+.search-box > span { font-size: 18px; line-height: 1; }
+.search-box input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: 10px var(--sans); }
+.search-box input::placeholder { color: #a1a9a0; }
+.entity-table-wrap { overflow-x: auto; }
+.entity-table { min-width: 650px; }
+.entity-table th { position: sticky; top: 0; }
+.entity-table td { height: 52px; }
+.records-footer { display: flex; justify-content: space-between; gap: 10px; padding: 12px 18px; border-top: 1px solid #edf0eb; color: #89928a; font: 9px var(--mono); }
+.records-heading h1 { font-size: clamp(34px, 3.7vw, 48px); }
+.record-id { color: #89928a; font: 10px var(--mono); }
+.record-secondary { display: block; margin-top: 4px; color: #89928a; font-size: 9px; }
+.empty-records { padding: 42px 12px !important; color: #7d867e; text-align: center; }
+@media (max-width: 760px) { .records-toolbar { align-items: stretch; flex-direction: column; } .entity-tabs { overflow-x: auto; padding-bottom: 2px; } .entity-tab { flex: 0 0 auto; padding-right: 9px; padding-left: 9px; } .search-box { width: 100%; } }

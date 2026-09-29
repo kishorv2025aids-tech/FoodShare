@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#203a2d">
+    <title>Sign in | FoodShare</title>
+    <link rel="stylesheet" href="/auth.css">
+    <script src="/auth.js" defer></script>
+</head>
+<body data-page="signin">
+    <main class="auth-shell">
+        <section class="auth-story">
+            <a class="auth-brand" href="/signin"><span class="brand-gem"></span>FoodShare</a>
+            <div class="story-content">
+                <p class="story-kicker">GOOD FOOD, GOOD NEIGHBORS</p>
+                <h1>Make extra<br>food <em>matter.</em></h1>
+                <p class="story-copy">A shared table starts with someone choosing to give.</p>
+            </div>
+            <div class="story-bottom"><span class="story-rule"></span><span>LOCAL FOOD. SHARED WITH CARE.</span></div>
+        </section>
+        <section class="auth-form-side">
+            <div class="auth-card">
+                <p class="form-overline">WELCOME BACK</p>
+                <h2>Sign in</h2>
+                <p class="form-intro">Continue to your FoodShare community.</p>
+                <div class="form-alert" id="form-alert" role="alert" hidden></div>
+                <form action="/login" method="post" class="auth-form" id="signin-form">
+                    <input type="hidden" name="_csrf" id="csrf-token">
+                    <label for="username">Email address</label>
+                    <input id="username" name="username" type="email" autocomplete="email" placeholder="you@example.com" required>
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+                    <button class="primary-button" type="submit">Sign in <span aria-hidden="true">&#8594;</span></button>
+                </form>
+                <p class="auth-switch">New to FoodShare? <a href="/signup">Create an account</a></p>
+            </div>
+            <footer class="auth-footer">FoodShare <span>·</span> Community food exchange</footer>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+:root {
+    color-scheme: light;
+    --forest: #203a2d;
+    --leaf: #477355;
+    --ink: #1c2921;
+    --muted: #7b857c;
+    --gold: #e3bd66;
+    --sans: 'DM Sans', 'Segoe UI', sans-serif;
+    --display: 'Playfair Display', Georgia, serif;
+}
+* { box-sizing: border-box; }
+body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--ink); background: #f5f6f0; font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+.auth-shell { display: grid; min-height: 100vh; grid-template-columns: minmax(360px, .92fr) minmax(480px, 1.08fr); }
+.auth-story { position: relative; display: flex; min-height: 100vh; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 35px 7vw 30px; background: var(--forest); color: #f5f5ec; }
+.auth-story::before { position: absolute; right: -160px; bottom: -210px; width: 480px; height: 480px; border: 1px solid rgba(220,235,222,.12); border-radius: 50%; content: ''; }
+.auth-story::after { position: absolute; right: -92px; bottom: -142px; width: 344px; height: 344px; border: 1px solid rgba(220,235,222,.1); border-radius: 50%; content: ''; }
+.auth-brand { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 11px; width: fit-content; color: #f4f4ea; font-size: 14px; font-weight: 700; text-decoration: none; }
+.brand-gem { width: 12px; height: 12px; transform: rotate(45deg); border-radius: 3px 8px 3px 8px; background: var(--gold); }
+.story-content { position: relative; z-index: 1; max-width: 450px; padding: 60px 0; animation: rise 520ms ease both; }
+.story-kicker, .form-overline { margin: 0 0 21px; color: #bad0bd; font: 10px 'DM Mono', 'Courier New', monospace; }
+.story-content h1 { margin: 0; font-size: clamp(44px, 5.1vw, 72px); font-weight: 500; line-height: 1.03; letter-spacing: 0; }
+.story-content h1 em { color: var(--gold); font-family: var(--display); font-weight: 600; }
+.story-copy { max-width: 315px; margin: 20px 0 0; color: #c2cec2; font-size: 13px; line-height: 1.7; }
+.story-bottom { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; color: #afc1b1; font: 8px 'DM Mono', 'Courier New', monospace; }
+.story-rule { width: 24px; height: 1px; background: var(--gold); }
+.auth-form-side { display: flex; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 50px 7vw 20px; }
+.auth-card { width: min(100%, 390px); animation: rise 560ms 60ms ease both; }
+.form-overline { margin-bottom: 12px; color: var(--leaf); }
+.auth-card h2 { margin: 0; font-size: 30px; font-weight: 600; letter-spacing: 0; }
+.form-intro { margin: 8px 0 27px; color: var(--muted); font-size: 12px; }
+.auth-form { display: grid; }
+.auth-form label { display: flex; justify-content: space-between; margin: 0 0 7px; color: #465249; font-size: 11px; font-weight: 600; }
+.auth-form input, .auth-form select { width: 100%; height: 43px; margin: 0 0 17px; padding: 0 12px; border: 1px solid #d9e0d7; border-radius: 4px; outline: none; background: rgba(255,255,255,.78); color: var(--ink); font: 12px var(--sans); transition: border-color 140ms ease, box-shadow 140ms ease; }
+.auth-form input::placeholder { color: #a3aaa3; }
+.auth-form input:focus, .auth-form select:focus { border-color: #668772; box-shadow: 0 0 0 3px rgba(71,115,85,.1); }
+.auth-form select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, #758078 50%), linear-gradient(135deg, #758078 50%, transparent 50%); background-position: calc(100% - 17px) 18px, calc(100% - 12px) 18px; background-repeat: no-repeat; background-size: 5px 5px, 5px 5px; }
+.label-hint { color: #909a91; font-size: 9px; font-weight: 400; }
+.primary-button { display: flex; min-height: 45px; align-items: center; justify-content: space-between; margin-top: 4px; padding: 0 15px; border: 0; border-radius: 4px; background: var(--forest); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; transition: background 140ms ease, transform 140ms ease; }
+.primary-button:hover { transform: translateY(-1px); background: #2d5140; }
+.primary-button:disabled { cursor: wait; opacity: .65; }
+.primary-button span { color: var(--gold); font-size: 17px; }
+.auth-switch { margin: 20px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
+.auth-switch a { color: var(--leaf); font-weight: 700; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.auth-footer { width: min(100%, 390px); margin-top: 43px; color: #9ba39b; font: 9px 'DM Mono', 'Courier New', monospace; text-align: center; }
+.auth-footer span { padding: 0 5px; color: var(--gold); }
+.form-alert { margin: -9px 0 18px; padding: 10px 12px; border: 1px solid #e8c9bd; border-radius: 4px; background: #fff7f2; color: #8d4434; font-size: 11px; line-height: 1.5; }
+.form-alert[hidden] { display: none; }
+.form-alert.success { border-color: #c9ddca; background: #eef7ef; color: #396546; }
+.signup-card { padding: 5px 0; }
+.signup-card .form-intro { margin-bottom: 19px; }
+.signup-card .auth-form input, .signup-card .auth-form select { height: 39px; margin-bottom: 12px; }
+.signup-card .auth-switch { margin-top: 14px; }
+.signup-card + .auth-footer { margin-top: 22px; }
+@keyframes rise { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@media (max-height: 750px) and (min-width: 701px) { .auth-form-side { padding-top: 24px; } .signup-card .form-intro { margin-bottom: 12px; } .signup-card .auth-form input, .signup-card .auth-form select { height: 35px; margin-bottom: 8px; } .auth-footer { margin-top: 18px; } }
+@media (max-width: 760px) { .auth-shell { grid-template-columns: 1fr; } .auth-story { min-height: 290px; padding: 24px 8vw 22px; } .story-content { padding: 32px 0 27px; } .story-kicker { margin-bottom: 14px; } .story-content h1 { font-size: 44px; } .story-copy { margin-top: 11px; font-size: 11px; } .story-bottom { font-size: 7px; } .auth-form-side { min-height: auto; padding: 40px 8vw 18px; } .auth-card { width: min(100%, 420px); } .auth-footer { margin-top: 30px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
